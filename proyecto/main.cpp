@@ -54,7 +54,7 @@ vector<nuevoVector3f> tnormal[numOBJ];
 vector<nuevoVector2f> tuv[numOBJ];
 vector<vector<unsigned> > tf_v[numOBJ];
 
-
+//DESPLAZARCE EN EL ESCENARIO
 GLfloat mover_x = 0.0;
 GLfloat mover_y = 0.0;
 GLfloat mover_z = 0.0;
@@ -67,7 +67,7 @@ GLfloat luz_posicion2 = 0.0; //SEGUNDA VARIABLE
 
 
 //PROTOTIPOS
-void dibujado(int id);
+void dibujado(int id_textura, int id_obj);
 void loadInput(string archivo, int id);
 void loadTextures(const char *texto, int id);
 void keyboardFunc( unsigned char key, int x, int y );
@@ -76,7 +76,6 @@ void drawScene(void);
 void initRendering();
 void reshapeFunc(int w, int h);
 
-void habitacion();
 void generarTexturas();
 
 //
@@ -123,14 +122,25 @@ void keyboardFunc( unsigned char key, int x, int y )
 		if(cambioColor==4) // 4 TIPO DE COLORES
 		    cambioColor = 0;
         break;
-      case 'x':
-      case 'X':
+      case 'a':
          mover_x+=1.0;
          break;
-      case 'z':
-      case 'Z':
+      case 'A':
          mover_x-=1.0;
          break;
+      case 's':
+         mover_y+=1.0;
+         break;
+      case 'S':
+         mover_y-=1.0;
+         break;
+      case 'd':
+         mover_z+=1.0;
+         break;
+      case 'D':
+         mover_z-=1.0;
+         break;
+       
     default:
         cout << "Unhandled key press " << key << "." << endl;
     }
@@ -206,47 +216,39 @@ void drawScene(void)
 
 
    //------------------------------------------------
-
+   //GRAFICA DE OBJETOS
    glScalef(0.4, 0.4, 0.4);
-   glRotatef(mover_x, 1.0, 1.0, 0.0);
-   dibujado(0);
-   dibujado(1);
-   dibujado(2);
+   glTranslatef(mover_x, mover_y, mover_z);
+   //glRotatef(mover_x, 1.0, 1.0, 0.0);
+      //HABITACION
+   //dibujado(0, 0);
+   //dibujado(1, 1);
+   //dibujado(2, 2);
+      //MUEBLES
+   dibujado(3, 3);//cama
+   dibujado(4, 4);//colchon
+   dibujado(3, 5);//escritorio
+   dibujado(3, 6);//librero
+   dibujado(3, 7);//mesa
+   dibujado(3, 8);//silla en escritorio
+
+   
    //------------------------------------------------
+
     
 	// Dump the image to the screen.
       glutSwapBuffers();
 }
-//coordenada
-void habitacion()
-{
-   glColor3f(1.0f, 1.0f, 1.0f);
-   glBegin(GL_LINES);
-   glVertex3f(0.0f, 0.0f, 0.0f);
-   glVertex3f(0.0f, 1.0f, 0.0f);
-   glEnd();
-
-   glColor3f(0.0f, 1.0f, 0.0f);
-   glBegin(GL_LINES);
-   glVertex3f(0.0f, 0.0f, 0.0f);
-   glVertex3f(1.0f, 0.0f, 0.0f);
-   glEnd();
-   glColor3f(1.0f, 1.0f, 1.0f);
-   glBegin(GL_LINES);
-   glVertex3f(0.0f, 0.0f, 0.0f);
-   glVertex3f(0.0f, 0.0f, 1.0f);
-   glEnd();
-}
 //DIBUJO DE LOS TRIANGULOS CON LOS ARCHIVOS .OBJ CON SU TEXTURA
-void dibujado(int id)
+void dibujado(int id_textura, int id_obj) // id: id de la textura
 {    
-   vector<nuevoVector3f>vertex = tvertex[id];
-   vector<nuevoVector3f> normal = tnormal[id];
-   vector<nuevoVector2f> uv = tuv[id];
-   vector<vector<unsigned> >  f_v = tf_v[id];
+   vector<nuevoVector3f>vertex = tvertex[id_obj];
+   vector<nuevoVector3f> normal = tnormal[id_obj];
+   vector<nuevoVector2f> uv = tuv[id_obj];
+   vector<vector<unsigned> >  f_v = tf_v[id_obj];
      
      glEnable(GL_TEXTURE_2D);
-	  glBindTexture(GL_TEXTURE_2D, texID[id]);
+	  glBindTexture(GL_TEXTURE_2D, texID[id_textura]);
 	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
      for(unsigned int j=0; j < f_v.size(); j++) 
@@ -353,12 +355,10 @@ void loadInput(string archivo, int id) {
   
    file.close();
    //SE ALMACENA
-   cout<<"inicio guardado"<<endl;
    tvertex[id] = vertex;
    tnormal[id] = normal;
    tuv[id] = uv;
    tf_v[id] = f_v;
-   cout<<"finalizo guardado"<<endl;
 
    
 }
@@ -407,11 +407,22 @@ void generarTexturas()
    loadTextures("obj/casa/pared.jpg", 0);
    loadTextures("obj/casa/techo.jpg", 1);
    loadTextures("obj/casa/piso.jpg", 2);
+
+   loadTextures("obj/muebles/madera.jpg", 3);
+   loadTextures("obj/muebles/colchon.jpg", 4);
    
    //CARGANDO OBJETOS
+      //HABITACION
    loadInput("obj/casa/pared.obj",0);
    loadInput("obj/casa/techo.obj",1);
    loadInput("obj/casa/piso.obj",2);
-   
+
+      //MUEBLES
+   loadInput("obj/muebles/cama.obj",3);
+   loadInput("obj/muebles/colchon.obj",4);
+   loadInput("obj/muebles/escritorio.obj",5);
+   loadInput("obj/muebles/librero.obj",6);
+   loadInput("obj/muebles/mesa.obj",7);
+   loadInput("obj/muebles/silla.obj",8);
 }
 
