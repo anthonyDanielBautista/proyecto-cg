@@ -2,8 +2,7 @@ CC = g++
 CFLAGS = -Wall
 PROG = textures
 
-SRCS = main.cpp 
-
+SRCS = main.cpp nuevoVector3f.cpp nuevoVector2f.cpp CObjeto.cpp CTeclado.cpp 
 ifeq ($(shell uname),Darwin)
 	LIBS = -framework OpenGL -framework GLUT
 else
