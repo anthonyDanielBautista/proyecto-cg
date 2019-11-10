@@ -1,9 +1,20 @@
 /*
+
+   EJES:
+         |Y
+         |  /X
+         | /
+         |/_____Z
+   
+      
    MOVIMIENTO DE LA CAMARA:
-      USO DE LAS TECLAS MAYÚSCULAS Y MINÚSCULAS
-      TRASLACIÓN: A->eje X, S->eje Y, D->eje Z
-      ROTACIÓN RESPECTO A SU EJE: Z->GIRA RESPECTO AL EJE Z Y EL RADIO ,
-                                  X-> GIRA EN EL PLANO X E Y
+      -TRASLACIÓN: A->eje X, S->eje Y, D->eje Z
+         CON MAYÚSCULAS DISMINUYE 
+         CON MINÚSCULAS AUMENTA
+         
+      -ROTACIÓN RESPECTO A SU EJE 
+       POR TECLAS ESPECIALES:      Z-> arriba y abajo
+                                  Y->  izquierda y derecha
 */
 
 #include "GL/freeglut.h"
@@ -81,16 +92,12 @@ void drawScene(void)
    glMatrixMode( GL_MODELVIEW );  
    glLoadIdentity();      
    
-   //-----------------------CAMARA-------------------  
-   GLdouble x = teclado.cameraX+teclado.deltax; 
-   GLdouble y = teclado.cameraY+teclado.deltay;   
-   GLdouble z = teclado.cameraZ+teclado.deltaz;  
-   GLdouble r = teclado.radio;
-   GLdouble teta = teclado.teta;
-   GLdouble fi = teclado.fi;
-   gluLookAt(x, y, z, r*sin(teta)*cos(fi)+teclado.deltax ,r*sin(teta)*sin(fi)+teclado.deltay, r*cos(teta)+teclado.deltaz, teclado.upX, teclado.upY,teclado.upZ);
+   //-----------------------CAMARA-------------------
+   GLfloat miraX =teclado.radio*sin(teclado.teta)*cos(teclado.fi);
+   GLfloat miraZ =teclado.radio*sin(teclado.teta)*sin(teclado.fi);
+   GLfloat miraY =teclado.radio*cos(teclado.teta);
    
-   
+   gluLookAt(teclado.pX, teclado.pY, teclado.pZ, teclado.pX + miraX, teclado.pY+ miraY, teclado.pZ + miraZ, teclado.upX, teclado.upY, teclado.upZ);
    //-----------------------------ILUMINACION --------------------------
   
    GLfloat diffColors[4][4] = { {0.5, 0.5, 0.9, 1.0},
@@ -120,10 +127,7 @@ void drawScene(void)
 
    //------------------------------------------------
    //GRAFICA DE OBJETOS
-   
-   glRotatef(90.0, 1.0, 0.0, 0.0);
- 
-   glScalef(0.4, 0.4, 0.4);
+   //glScalef(0.4, 0.4, 0.4);
 
    //ROBOT
    glPushMatrix();
@@ -135,6 +139,7 @@ void drawScene(void)
       objeto.dibujado(i,i);
 
    glPopMatrix();
+  
    //HABITACION
    objeto.dibujado(31, 31);
    objeto.dibujado(32, 32);
@@ -146,7 +151,7 @@ void drawScene(void)
    objeto.dibujado(34, 37);//librero
    objeto.dibujado(34, 38);//mesa
    objeto.dibujado(34, 39);//silla en escritorio
-
+    /**/
    glutSwapBuffers();
 }
 
@@ -167,7 +172,7 @@ void reshapeFunc(int w, int h)
     }
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(50.0, 1.0, 1.0, 100.0);
+    gluPerspective(70.0, 1.0, 1.0, 100.0);//70: angulo de vision de la camara
 }
 
 
@@ -243,6 +248,7 @@ void generarTexturas()
    objeto.loadInput("obj/robot/partes/dedo_i_3_1.obj",29);   
    objeto.loadInput("obj/robot/partes/dedo_i_3_2.obj",30);
    
+  
    //CARGANDO TEXTURA
    objeto.loadTextures("obj/casa/pared.jpg", 31);
    objeto.loadTextures("obj/casa/techo.jpg", 32);
@@ -263,5 +269,6 @@ void generarTexturas()
    objeto.loadInput("obj/muebles/librero.obj",37);
    objeto.loadInput("obj/muebles/mesa.obj",38);
    objeto.loadInput("obj/muebles/silla.obj",39);
+    /**/
 }
 

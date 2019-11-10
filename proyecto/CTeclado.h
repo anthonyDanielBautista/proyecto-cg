@@ -5,13 +5,15 @@ class CTeclado{
       //MOVER ROBOT
       int m_x, m_z;
       //VARIABLES CAMARA
-      GLdouble cameraX=-5.0, cameraY=-4.0, cameraZ=1.0; 
-      GLdouble deltax=0.0, deltay=0.0, deltaz=0.0;
-      GLdouble upX=0.0, upY=0.0, upZ=1.0;
-         //GIRAR CAMARA
-      GLdouble teta = 1.3, fi=0.8, radio=5.0;
-      //CAMBIAR COLOR
+         //DESPLAZAMIENTO
+         //GIRO
+      GLfloat pX=-13, pY=2.4, pZ=3.6; 
+      GLfloat upX=0.0, upY=1.0, upZ=0.0;
+      GLfloat teta = 1.873542278417901, fi=-0.24168671525247656, radio=6.7082039325;
+      
+       //CAMBIAR COLOR
       GLuint cambioColor = 0;
+      
       //CAMBIO DE POSICION DE LUZ
       GLfloat luz_posicion1 = 0.0; //PRIMERA VARIABLE
       GLfloat luz_posicion2 = 0.0; //SEGUNDA VARIABLE
